@@ -3,7 +3,7 @@ module Pinterest
     module User
 
       def me(options={})
-        get('me', options)
+        get('user_account', options)
       end
 
       def get_followers(options={})
