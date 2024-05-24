@@ -15,7 +15,7 @@ module Pinterest
       end
 
       def get_boards(options={})
-        get("users/me/boards/feed/", options)
+        get("boards", options)
       end
 
       def get_followed_boards(options={})
@@ -56,7 +56,7 @@ module Pinterest
 
       def get_pins(options={})
         options[:query] ||= '*'
-        get('me/search/pins', options)
+        get('pins', options)
       end
 
       def get_user(user, options={})

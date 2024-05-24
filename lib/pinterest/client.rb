@@ -1,4 +1,4 @@
-require 'faraday_middleware'
+require 'faraday/mashify'
 require 'pinterest/client/user'
 require 'pinterest/client/pin'
 require 'pinterest/client/board'
@@ -52,16 +52,17 @@ module Pinterest
       response = connection(raw, log).send(method) do |request|
         case method
         when :get
-          path = path + "?access_token=" + @access_token
+          # path = path + "?access_token=" + @access_token
+          request.headers['Authorization'] = "BEARER #{@access_token}"
           request.url(CGI.escape(path), options)
         when :patch
-          request.path = path + "?access_token=" + @access_token
-          request.body = options unless options.empty?
+          # request.path = path + "?access_token=" + @access_token
           request.headers['Authorization'] = "BEARER #{@access_token}"
+          request.body = options unless options.empty?
         when :post, :put, :delete
           request.path = CGI.escape(path)
-          request.body = options unless options.empty?
           request.headers['Authorization'] = "BEARER #{@access_token}"
+          request.body = options unless options.empty?
         end
       end
       return response.body
@@ -69,20 +70,26 @@ module Pinterest
 
     def connection(raw = false, log = false)
       options = @connection_options.merge({
-        :headers => {'Accept' => "application/json; charset=utf-8", 'User-Agent' => user_agent},
-        :url => endpoint,
+                                            :headers => {'Accept' => "application/json; charset=utf-8", 'User-Agent' => user_agent},
+                                            :url => endpoint,
       })
 
-      Faraday::Connection.new(options) do |connection|
-        unless raw
-          connection.use FaradayMiddleware::Mashify
-        end
-        connection.use Faraday::Request::Multipart
-        connection.use Faraday::Response::ParseJson
-        connection.use Faraday::Request::UrlEncoded
-        connection.response :logger if log
-        connection.adapter(adapter)
+      Faraday.new(options) do |f|
+        f.response :json
       end
+
+      # Faraday::Connection.new(options) do |connection|
+      #   unless raw
+      #     connection.response :mashify
+      #     connection.response :json
+      #   end
+      #   connection.use Faraday::Request::Multipart
+      #   connection.use Faraday::Response::ParseJson
+      #   connection.use Faraday::Request::UrlEncoded
+      #   connection.response :logger if log
+      #   connection.adapter(adapter)
+      # end
+
     end
 
     def endpoint

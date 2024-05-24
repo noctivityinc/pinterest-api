@@ -26,11 +26,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "dotenv", "~> 2.0"
   spec.add_development_dependency "webmock", "~> 3.0.1"
 
-  spec.add_dependency 'faraday', "~> 1.0.0"
-  spec.add_dependency 'faraday_middleware', "~> 1.0.0"
+  spec.add_dependency 'faraday', "~> 2.7.11"
+  # spec.add_dependency 'faraday_middleware', "~> 1.2.0"
+  spec.add_dependency 'faraday-mashify', "~> 0.1.1"
   spec.add_dependency 'hashie', "~> 3.0"
-  spec.add_dependency 'omniauth', '>= 1.0'
-  spec.add_dependency 'omniauth-oauth2', '>= 1.0'
+  spec.add_dependency 'omniauth', '>= 2.1.0'
+  spec.add_dependency 'omniauth-oauth2', '>= 1.8'
   spec.add_dependency 'streamio-ffmpeg', '~> 3.0.2'
 
 end
